@@ -1,0 +1,12 @@
+
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "name": "John",
+  "lastname": "Doe",
+  "passport_number": "AB1234567"
+}
+
+###
+
