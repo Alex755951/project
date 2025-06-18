@@ -57,36 +57,6 @@ func main() {
 		w.Write([]byte("ok"))
 	})
 
-	http.HandleFunc("/data", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != http.MethodPost {
-			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-			return
-		}
-
-		var data map[string]interface{}
-		if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
-			http.Error(w, "invalid json", http.StatusBadRequest)
-			return
-		}
-
-		message, err := json.Marshal(data)
-		if err != nil {
-			http.Error(w, "server error", http.StatusInternalServerError)
-			return
-		}
-
-		if err := writer.WriteMessages(context.Background(),
-			kafka.Message{Value: message},
-		); err != nil {
-			log.Printf("Error writing to kafka: %v", err)
-			http.Error(w, "kafka error", http.StatusInternalServerError)
-			return
-		}
-
-		log.Printf("Produced data: %+v", data)
-		w.Write([]byte("ok"))
-	})
-
 	log.Println("Producer listening on :8080")
 	http.ListenAndServe(":8080", nil)
 }
